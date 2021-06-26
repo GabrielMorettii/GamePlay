@@ -3,47 +3,57 @@ import {
   View, 
   Text, 
   Image,
+  Alert,
+  ActivityIndicator
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
-import { ButtonIcon } from '../../components/ButtonIcon'
-import IllustrationImage from '../../assets/illustration.png'
+import { useAuth } from '../../hooks/auth';
 
-import {styles}  from './styles'
-import { BackGround } from '../../../src/components/BackGround';
+import IllustrationImg from '../../assets/illustration.png';
+import { theme } from '../../global/styles/theme';
+import { styles } from './styles';
+
+import { ButtonIcon } from '../../components/ButtonIcon';
+import { BackGround } from '../../components/BackGround';
 
 export function SignIn(){
-  const navigation = useNavigation();
+  const { user, signIn } = useAuth();
 
-  function handleSignIn(){
-    navigation.navigate('Home')
+  async function handleSignIn() {
+    try {
+      await signIn();
+    }catch (error) {
+      Alert.alert(error);
+    }
   }
 
-  return (
+  return(
     <BackGround>
-      <View style={styles.container}>
+      <View style={styles.container}>     
         <Image 
-          source={IllustrationImage} 
-          style={styles.image}
-          resizeMode='stretch'
+          source={IllustrationImg} 
+          style={styles.image} 
+          resizeMode="stretch"
         />
 
         <View style={styles.content}>
           <Text style={styles.title}>
             Conecte-se {'\n'}
-            e Organize {'\n'}
-            suas jogatinas
+            e organize suas {'\n'} 
+            jogatinas
           </Text>
+
           <Text style={styles.subtitle}>
-            Crie grupos para jogar seus games{`\n`}
+            Crie grupos para jogar seus games {'\n'} 
             favoritos com seus amigos
           </Text>
-          <ButtonIcon
-          title="Entrar com Discord"
+
+          <ButtonIcon 
+            title="Entrar com Discord"
             onPress={handleSignIn}
-          />
+          />                            
         </View>
       </View>
     </BackGround>
-  )
+  );
 }
